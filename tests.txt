@@ -1,0 +1,195 @@
+TESTS
+=====
+
+TC  1:  Bind to a port
+--------  -----------------
+
+$ ./your_program.sh
+Connecting to localhost:4221 using TCP
+
+Expected result: 
+Successful connection
+
+
+
+TC  2: Respond with 200
+-------  ----------------------
+
+$ ./your_program.sh
+$ curl -v http://localhost:4221/
+
+Expected result: 
+Received response with 200 status code
+
+
+
+TC 3: Extract URL path
+------- ----------------------
+
+$ ./your_program.sh
+$ curl -v http://localhost:4221/pineapple
+
+Expected result: 
+Received response with 404 status code
+
+
+
+TC 4:  Respond with body
+------- ------------------------
+
+$ ./your_program.sh
+$ curl -v http://localhost:4221/echo/blueberry
+
+Expected result: 
+Received response with 200 status code
+Content-Type header is present
+Content-Length header is present
+Body is correct => "blueberry"
+
+
+
+TC 5:  Read header
+------- ----------------
+
+$ ./your_program.sh
+$ curl -v http://localhost:4221/user-agent -H "User-Agent: apple/mango"
+
+Expected result: 
+Received response with 200 status code
+Content-Type header is present
+Content-Length header is present
+Body is correct => "apple/mango"
+
+
+
+TC 6:  Concurrent connections
+------- -------------------------------
+
+$ ./your_program.sh
+Creating 2 parallel connections
+
+client-1: $ curl -v http://localhost:4221/
+client-2: $ curl -v http://localhost:4221/
+
+Expected result: 
+Received response with 200 status code
+Received response with 200 status code
+
+
+
+TC 7:  Return a file
+------- ----------------
+
+$ ./your_program.sh --directory /tmp/data/codecrafters.io/http-server-tester/
+Testing existing file
+
+$ curl -v http://localhost:4221/files/mango_pear_banana_banana
+
+Expected result: 
+Received response with 200 status code
+Content-Type header is present
+Content-Length header is present
+Body is correct => "mango_pear_banana_banana"
+
+Testing non existent file returns 404
+$ curl -v http://localhost:4221/files/non-existentapple_strawberry_grape_grape
+
+Expected result: 
+Received response with 404 status code
+
+
+
+TC 8:  Read request body
+------- ------------------------
+
+$ ./your_program.sh --directory /tmp/data/codecrafters.io/http-server-tester/
+$ curl -v -X POST http://localhost:4221/files/banana_pear_grape_grape -H "Content-Length: 72" -H "Content-Type: application/octet-stream" -d 'raspberry strawberry blueberry orange raspberry raspberry pineapple pear'
+
+Expected result: 
+Received response with 201 status code
+
+
+
+TC 9:  HTTP Compression - Compression headers
+------- --------------------------------------------------------
+
+$ ./your_program.sh
+$ curl -v http://localhost:4221/echo/banana -H "Accept-Encoding: gzip"
+
+Expected result: 
+Received response with 200 status code
+Content-Encoding header is present
+
+$ curl -v http://localhost:4221/echo/banana -H "Accept-Encoding: invalid-encoding"
+
+Expected result: 
+Received response with 200 status code
+Content-Encoding header is not present
+
+
+
+TC 10:  HTTP Compression - Multiple compression schemes
+------- -------------------------------------------------------------------
+
+$ ./your_program.sh
+$ curl -v http://localhost:4221/echo/raspberry -H "Accept-Encoding: encoding-1, gzip, encoding-2"
+
+Expected result: 
+Received response with 200 status code
+Content-Encoding header is present
+
+$ curl -v http://localhost:4221/echo/raspberry -H "Accept-Encoding: encoding-1, encoding-2"
+
+Expected result: 
+Received response with 200 status code
+Content-Encoding header is not present
+
+
+
+TC 11:  HTTP Compression - Gzip compression
+------- ----------------------------------------------------
+
+$ ./your_program.sh
+$ curl -v http://localhost:4221/echo/pear -H "Accept-Encoding: gzip"
+
+Expected result: 
+Received response with 200 status code
+Content-Encoding header is present
+Content-Length header is present
+Body is gzip encoded
+Body is correct
+
+
+
+======================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
