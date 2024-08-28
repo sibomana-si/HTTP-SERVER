@@ -2,6 +2,7 @@
 
 # Description 
 
-This codebase implements a solution to CodeCrafters' ["Build Your Own HTTP server" Challenge](https://app.codecrafters.io/courses/http-server/overview). 
+This codebase implements a solution to CodeCrafters' ["Build Your Own HTTP server" Challenge](https://app.codecrafters.io/courses/http-server/overview):
+
 An HTTP/1.1 server that's capable of handling simple GET/POST requests, serving files and handling multiple concurrent connections.
 
